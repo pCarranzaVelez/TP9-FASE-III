@@ -115,6 +115,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="BasicLCD.h" />
+    <ClInclude Include="Fase1.h" />
+    <ClInclude Include="Fase2.h" />
+    <ClInclude Include="ftd2xx.h" />
+    <ClInclude Include="LCDControl.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="targetver.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="BasicLCD.cpp" />
+    <ClCompile Include="Fase1.cpp" />
+    <ClCompile Include="Fase2.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
