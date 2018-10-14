@@ -2,11 +2,14 @@
 #include <iostream>
 #include <exception>
 #include <list>
+#include "Fase1.h"
+#include "BasicLCD.h"
+#include "Fase2.h"
 #include "parselib.h"
 #include "Callback.h"
 #include "curl/curl.h"
 #include "json.hpp"
-#include "Fase2.h"
+
 
 //Vamos a usar la librería NLOHMANN JSON 
 using json = nlohmann::json;
@@ -30,11 +33,11 @@ int main(int argc, char ** argv)
 			CURLM *multiHandle;			//Variable donde vamos a atachear los easy handles
 			CURLcode res;
 			std::string readString, token;
-			
+			BasicLCD * lcd = new Fase2;
 
 			// Query es la dirección de Twitter que vamos a consultar. vamos a bajar los &count twits de screen_name en formato JSON.
 			std::string query = "https://api.twitter.com/1.1/statuses/user_timeline.json?screen_name=";
-			std::string accountName = a.username;		//METEME EL ACCOUNT ACA PAPA
+			std::string accountName = a.username;		
 			std::string query2 = "&count=";
 			std::string tweetcount = std::to_string(a.tweetcount);
 			query += (accountName + query2 + tweetcount);
@@ -94,6 +97,7 @@ int main(int argc, char ** argv)
 					std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
 					//Hacemos un clean up de curl antes de salir.
 					curl_easy_cleanup(curl);
+					delete lcd;
 					return 0;
 				}
 
@@ -116,12 +120,14 @@ int main(int argc, char ** argv)
 				{
 					//Si hubo algun error, se muestra el error que devuelve la libreria
 					std::cerr << e.what() << std::endl;
+					delete lcd;
 					return 0;
 				}
 			}
 			else
 			{
 				std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
+				delete lcd;
 				return 0;
 			}
 			//Una vez obtenido el Token ahora voy a buscar los Twits
@@ -160,38 +166,37 @@ int main(int argc, char ** argv)
 				//Realizamos ahora un perform no bloqueante
 				curl_multi_perform(multiHandle, &stillRunning);
 
+				lcd->lcdSetCursorPosition({0,1});
+				*lcd << (const unsigned char *)a.username;	//imprime el usuario en la primera linea del display
+
 				while (stillRunning)	//hay que mostrar siempre en la primera linea el nombre de la cuenta que me mandan por cmd
 				{
 					//Debemos hacer polling de la transferencia hasta que haya terminado
 					curl_multi_perform(multiHandle, &stillRunning);
 
-					/*	algo que muestre en el display que no se colgó
+					//	algo que muestre en el display que no se colgó
+					lcd->lcdSetCursorPosition({1, 6});
+					*lcd << '.';
+					Sleep(10);
+					*lcd << '.';
+					Sleep(10);
+					*lcd << '.';
+					Sleep(10);
+					*lcd << '.';
+					Sleep(10);
+					lcd->lcdSetCursorPosition({1, 6});
+					lcd->lcdClearToEOL();
 
-					void waiting_display()	//habría que setear el cursor en la segunda linea (este es un ejemplo pedorro)
-					{
-						const int n;
-						n = 0;
-						n++;
-
-						if (n%2)
-						{
-							cout << "    . . . . .   ";
-						}
-						else
-						{
-							cout << "   . . . . .    ";
-						}
-					}
-
-					*/
 				}
-
+				lcd->lcdSetCursorPosition({ 1,6 });
+				lcd->lcdClear();
 				//Checkeamos errores
 				if (res != CURLE_OK)
 				{
 					std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
 					//Hacemos un clean up de curl antes de salir.
 					curl_easy_cleanup(curl);
+					delete lcd;
 					return 0;
 				}
 
@@ -206,7 +211,10 @@ int main(int argc, char ** argv)
 				{
 					//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
 					for (auto element : j)
+					{
 						names.push_back(element["text"]);
+					}
+						
 					std::cout << "Tweets retrieved from Twitter account: " << std::endl;
 					printNames(names);
 				}
@@ -220,8 +228,7 @@ int main(int argc, char ** argv)
 			else
 				std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
 
-
-			getchar();
+			delete lcd;
 			return 0;
 		}
 		else

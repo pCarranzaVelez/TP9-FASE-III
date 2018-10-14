@@ -3,7 +3,13 @@
 #include <string>
 
 using namespace std;
-enum EVENT_TYPE { NO_EVENT, TIMER_EV, KB_EVENT, SOFTWARE_EV, QUIT};	//¿vamos a tener NO_EVENT?
+enum EVENT_TYPE { NO_EVENT, TIMER_EV, KB_EVENT, SOFTWARE_EV, QUIT};
+
+typedef struct
+{
+	EVENT_TYPE type;
+	char data;
+}KBevent_t;
 
 class Dispatcher
 {
