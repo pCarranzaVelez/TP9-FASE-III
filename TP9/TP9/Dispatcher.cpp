@@ -14,6 +14,7 @@ Dispatcher(tweetData_t * tweets, unsigned int tc, BasicLCD * lcd)
 	this->myEvent = { NO_EVENT, 0 };
 	this->currItr = 0;
 	this->currTweetThread = NULL;
+	this->start = chrono::steady_clock::now();
 }
 
 Dispatcher::
@@ -73,6 +74,8 @@ dispatch()
 				if (tweetCursor < tweetCount)
 				{
 					tweetCursor++;
+					this->currItr = 0;
+					this->currTweetThread = NULL;
 				}
 			}
 			break;
@@ -82,6 +85,8 @@ dispatch()
 				if (tweetCursor > 0)
 				{
 					tweetCursor--;
+					this->currItr = 0;
+					this->currTweetThread = NULL;
 				}
 			}
 			break;
@@ -128,16 +133,27 @@ displayTweet()
 	}
 	if (this->currItr < tweetLength)
 	{
-		*(this->display) << (unsigned char *)currTweetThread + currItr;
-		Sleep(this->delay);
+		*(this->display) << (unsigned char *)(currTweetThread + currItr);
 		this->currItr++;
 	}
 	else
 	{
-		Sleep(this->delay);
 		this->currItr = 0;
 		this->currTweetThread = NULL;
 		this->display->lcdSetCursorPosition({ 1, 0 });
 		this->display->lcdClearToEOL();
 	}
+}
+
+bool Dispatcher::getTimeStatus()
+{
+	bool ret = false;
+	chrono::steady_clock::time_point end = chrono::steady_clock::now();
+
+	if (chrono::duration_cast<std::chrono::microseconds>(end - start).count() >= delay)
+	{
+		ret = true;
+	}
+	start = chrono::steady_clock::now();
+	return ret;
 }

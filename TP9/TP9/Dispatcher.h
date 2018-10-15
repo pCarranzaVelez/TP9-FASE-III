@@ -28,8 +28,11 @@ class Dispatcher
 		bool getExit();
 		void setEvent(event_t input);
 		void setEvent(EVENT_TYPE type, char data);
+		bool getTimeStatus();
+
 
 	private:
+		chrono::steady_clock::time_point start;
 		int currItr;
 		void displayTweet();
 		char * currTweetThread;

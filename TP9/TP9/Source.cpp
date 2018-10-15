@@ -21,7 +21,7 @@ static size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
 
 //quizas moverlas despues
 
-void stringMonthToNumber(string month);
+string stringMonthToNumber(string month);
 string stringToDate(string date);
 
 
@@ -219,26 +219,26 @@ int main(int argc, char ** argv)
 					int i = 0;
 					for (auto element : j)
 					{
-						(tweets + i)->text = (std::string) element["text"];
-						(tweets + i)->time = stringToDate((std::string) element["created_at"]);	//DD/MM/AA - hh:mm
-						(tweets + i)->name = (std::string) element["user"]["name"];
+						(tweets + i)->text = element["text"].get<std::string>();
+						(tweets + i)->time = stringToDate(element["created_at"].get<std::string>());	//DD/MM/AA - hh:mm
+						(tweets + i)->name = element["user"]["name"].get<std::string>();
 						i++;
 					}
 					Dispatcher dispatcher(tweets, a.tweetcount, lcd);
 
 					while (dispatcher.getExit())
 					{
-						if (kbhit())
+						if (_kbhit())
 						{
-							char data = getch();
+							char data = _getch();
 							dispatcher.setEvent({ KB_EVENT, data });
 							dispatcher.dispatch();
 						}
-						/*else if(timer)
+						else if(dispatcher.getTimeStatus())
 						{
 							dispatcher.setEvent({ TIMER_EV, 0 });
 							dispatcher.dispatch();
-						}*/
+						}
 						dispatcher.setEvent({ NO_EVENT, 0 });
 					}
 					//std::cout << "Tweets retrieved from Twitter account: " << std::endl;
@@ -304,7 +304,7 @@ static size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
 
 string stringToDate(string date)
 {
-	string day, month, year, hours, minutes, date;
+	string day, month, year, hours, minutes;
 	day = date.substr(8, 2);
 	month = stringMonthToNumber(date.substr(4, 3));
 	year = date.substr(28, 2);
