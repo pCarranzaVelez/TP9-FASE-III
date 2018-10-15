@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BasicLCD.h"
 
-//this is empty, this is so sad
+//This is empty, this is so sad. Alexa, play despacito.
 
 BasicLCD::BasicLCD()
 {

@@ -2,6 +2,7 @@
 #include <iostream>
 #include <exception>
 #include <list>
+#include "Dispatcher.h"
 #include "Fase1.h"
 #include "BasicLCD.h"
 #include "Fase2.h"
@@ -17,6 +18,11 @@ using json = nlohmann::json;
 //Funciones auxiliares
 void printNames(std::list<std::string> names);
 static size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp);
+
+//quizas moverlas despues
+
+void stringMonthToNumber(string month);
+string stringToDate(string date);
 
 
 int main(int argc, char ** argv)
@@ -48,7 +54,7 @@ int main(int argc, char ** argv)
 			std::string API_key = "HCB39Q15wIoH61KIkY5faRDf6";
 			std::string API_SecretKey = "7s8uvgQnJqjJDqA6JsLIFp90FcOaoR5Ic41LWyHOic0Ht3SRJ6";
 
-			std::list<std::string> names;
+			tweetData_t * tweets = new tweetData_t[a.tweetcount];
 
 			/************************************************************************************
 			*                      Get Bearer Token from the Twitter API						*
@@ -209,20 +215,40 @@ int main(int argc, char ** argv)
 				j = json::parse(readString);	//en esta parte se usaría el dispatcher y los eventos
 				try
 				{
-					//Al ser el JSON un arreglo de objetos JSON se busca el campo text para cada elemento
+					//Al ser el JSON un arreglo de objetos JSON se buscan los campos necesarios para cada elemento
+					int i = 0;
 					for (auto element : j)
 					{
-						names.push_back(element["text"]);
+						(tweets + i)->text = (std::string) element["text"];
+						(tweets + i)->time = stringToDate((std::string) element["created_at"]);	//DD/MM/AA - hh:mm
+						(tweets + i)->name = (std::string) element["user"]["name"];
+						i++;
 					}
-						
-					std::cout << "Tweets retrieved from Twitter account: " << std::endl;
-					printNames(names);
+					Dispatcher dispatcher(tweets, a.tweetcount, lcd);
+
+					while (dispatcher.getExit())
+					{
+						if (kbhit())
+						{
+							char data = getch();
+							dispatcher.setEvent({ KB_EVENT, data });
+							dispatcher.dispatch();
+						}
+						/*else if(timer)
+						{
+							dispatcher.setEvent({ TIMER_EV, 0 });
+							dispatcher.dispatch();
+						}*/
+						dispatcher.setEvent({ NO_EVENT, 0 });
+					}
+					//std::cout << "Tweets retrieved from Twitter account: " << std::endl;
 				}
 				catch (std::exception& e)
 				{
 					//Muestro si hubo un error de la libreria
 					std::cerr << e.what() << std::endl;
 				}
+				
 
 			}
 			else
@@ -273,3 +299,33 @@ static size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
 	s->append(data, realsize);
 	return realsize;						//recordar siempre devolver realsize
 }
+
+//**************************************************************
+
+string stringToDate(string date)
+{
+	string day, month, year, hours, minutes, date;
+	day = date.substr(8, 2);
+	month = stringMonthToNumber(date.substr(4, 3));
+	year = date.substr(28, 2);
+	hours = date.substr(11, 2);
+	minutes = date.substr(14, 2);
+
+	date = day + "/" + month + "/" + year + "/ - /"+ hours + ":" + minutes;
+	return date;
+}
+
+string stringMonthToNumber(string month)
+{
+	string months[12] = { "Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" };
+	string month_num;
+	for (int i = 0; i < 12; i++)
+	{
+		if (strcmp(month.c_str(), months[i].c_str()))
+		{
+			month_num = std::to_string(i);
+			return month_num;
+		}
+	}
+}
+
