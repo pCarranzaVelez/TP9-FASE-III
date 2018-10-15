@@ -125,7 +125,7 @@ displayTweet()
 	*(this->display) << (const unsigned char *) ((tweets + tweetCursor)->time.c_str());
 
 	this->display->lcdSetCursorPosition({ 1, 0 });
-	string output = (tweets + tweetCursor)->name + ": -" + (tweets + tweetCursor)->text + " -";
+	string output = (tweets + tweetCursor)->name + ": - " + (tweets + tweetCursor)->text + " -";
 	int tweetLength = output.length();
 	if(currTweetThread == NULL)
 	{
@@ -150,10 +150,10 @@ bool Dispatcher::getTimeStatus()
 	bool ret = false;
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
-	if (chrono::duration_cast<std::chrono::microseconds>(end - start).count() >= delay)
+	if (chrono::duration_cast<std::chrono::microseconds>(end - this->start).count() >= delay)
 	{
 		ret = true;
 	}
-	start = chrono::steady_clock::now();
+	this->start = chrono::steady_clock::now();
 	return ret;
 }

@@ -15,14 +15,7 @@
 //Vamos a usar la librería NLOHMANN JSON 
 using json = nlohmann::json;
 
-//Funciones auxiliares
-void printNames(std::list<std::string> names);
-static size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp);
 
-//quizas moverlas despues
-
-string stringMonthToNumber(string month);
-string stringToDate(string date);
 
 
 int main(int argc, char ** argv)
@@ -273,59 +266,3 @@ int main(int argc, char ** argv)
 		return 0;
 	}
 }
-
-
-//Funcion auxiliar para imprimir los tweets en pantalla una vez parseados
-void printNames(std::list<std::string> names)
-{
-	for (auto c : names)
-	{
-		//Eliminamos el URL al final para mostrar
-		int extended = c.find("https");
-		c = c.substr(0, extended);
-		c.append("...");
-		std::cout << c << std::endl;
-		std::cout << "-----------------------------------------" << std::endl;
-	}
-}
-
-//Concatena lo recibido en content a s
-static size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
-{
-	size_t realsize = size * nmemb;
-	char* data = (char *)contents;
-	//fprintf(stdout, "%s",data);
-	std::string* s = (std::string*)userp;
-	s->append(data, realsize);
-	return realsize;						//recordar siempre devolver realsize
-}
-
-//**************************************************************
-
-string stringToDate(string date)
-{
-	string day, month, year, hours, minutes;
-	day = date.substr(8, 2);
-	month = stringMonthToNumber(date.substr(4, 3));
-	year = date.substr(28, 2);
-	hours = date.substr(11, 2);
-	minutes = date.substr(14, 2);
-
-	date = day + "/" + month + "/" + year + "/ - /"+ hours + ":" + minutes;
-	return date;
-}
-
-string stringMonthToNumber(string month)
-{
-	string months[12] = { "Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" };
-	string month_num;
-	for (int i = 0; i < 12; i++)
-	{
-		if (strcmp(month.c_str(), months[i].c_str()))
-		{
-			month_num = std::to_string(i);
-			return month_num;
-		}
-	}
-}
-

@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "callback.h"
+#include "Callback.h"
 //**************************************  parseCallback  ****************************************************************	
 
 int parseCallback(char *key, char *value, void *UserData)
@@ -60,5 +60,45 @@ void strtolwr(char * str)
 			*(str + i) = tolower(*(str + i));
 		}
 		i++;
+	}
+}
+
+//Concatena lo recibido en content a s
+size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
+{
+	size_t realsize = size * nmemb;
+	char* data = (char *)contents;
+	//fprintf(stdout, "%s",data);
+	std::string* s = (std::string*)userp;
+	s->append(data, realsize);
+	return realsize;						//recordar siempre devolver realsize
+}
+
+//**************************************************************
+
+std::string stringToDate(std::string date)
+{
+	std::string day, month, year, hours, minutes;
+	day = date.substr(8, 2);
+	month = stringMonthToNumber(date.substr(4, 3));
+	year = date.substr(28, 2);
+	hours = date.substr(11, 2);
+	minutes = date.substr(14, 2);
+
+	date = day + "/" + month + "/" + year + "/ - /" + hours + ":" + minutes;
+	return date;
+}
+
+std::string stringMonthToNumber(std::string month)
+{
+	std::string months[12] = { "Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dec" };
+	std::string month_num;
+	for (int i = 0; i < 12; i++)
+	{
+		if (strcmp(month.c_str(), months[i].c_str()))
+		{
+			month_num = std::to_string(i);
+			return month_num;
+		}
 	}
 }
