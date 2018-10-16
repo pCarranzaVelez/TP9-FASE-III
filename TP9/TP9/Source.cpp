@@ -219,7 +219,7 @@ int main(int argc, char ** argv)
 					}
 					Dispatcher dispatcher(tweets, a.tweetcount, lcd);
 
-					while (dispatcher.getExit())
+					while (!dispatcher.getExit())
 					{
 						if (_kbhit())
 						{

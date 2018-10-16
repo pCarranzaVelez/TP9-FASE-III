@@ -78,15 +78,15 @@ size_t myCallback(void *contents, size_t size, size_t nmemb, void *userp)
 
 std::string stringToDate(std::string date)
 {
-	std::string day, month, year, hours, minutes;
+	std::string day, month, year, hours, minutes, myDate;
 	day = date.substr(8, 2);
 	month = stringMonthToNumber(date.substr(4, 3));
 	year = date.substr(28, 2);
 	hours = date.substr(11, 2);
 	minutes = date.substr(14, 2);
 
-	date = day + "/" + month + "/" + year + "/ - /" + hours + ":" + minutes;
-	return date;
+	myDate = day + "/" + month + "/" + year + " - " + hours + ":" + minutes;
+	return myDate;
 }
 
 std::string stringMonthToNumber(std::string month)
@@ -97,7 +97,8 @@ std::string stringMonthToNumber(std::string month)
 	{
 		if (strcmp(month.c_str(), months[i].c_str()))
 		{
-			month_num = std::to_string(i);
+			int realMonth = i + 1;
+			month_num = std::to_string(realMonth);
 			return month_num;
 		}
 	}
