@@ -35,7 +35,7 @@ class Dispatcher
 		chrono::steady_clock::time_point start;
 		int currItr;
 		void displayTweet();
-		char * currTweetThread;
+		char  currTweetThread[END_OF_LINE + 1];
 		tweetData_t * tweets;
 		unsigned int tweetCount;
 		bool exit;
