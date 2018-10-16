@@ -9,7 +9,7 @@ Dispatcher(tweetData_t * tweets, unsigned int tc, BasicLCD * lcd)
 	this->tweetCount = tc;
 	this->tweetCursor = 0;
 	this->exit = false;
-	this->delay = 1;
+	this->delay = 500;
 	this->display = lcd;
 	this->myEvent = { NO_EVENT, 0 };
 	this->currItr = 0;
@@ -28,6 +28,7 @@ getExit()
 	return (this->exit);
 }
 
+//setters del evento
 void Dispatcher::
 setEvent(event_t input)
 {
@@ -44,7 +45,9 @@ setEvent(EVENT_TYPE type, char data)
 	myEvent = { type, data };
 }
 
-
+/*
+* dispatch() es el dispatcher en si. Se llama cada vez que hay una situacion que cambie el campo metodo.
+*/
 void Dispatcher::
 dispatch()
 {
@@ -53,11 +56,11 @@ dispatch()
 	case NO_EVENT:
 	break;
 
-	case TIMER_EV:
+	case TIMER_EV:				//cada vez que pase un tick del timer, se hace un update del display
 		displayTweet();
 	break;
 
-	case KB_EVENT:
+	case KB_EVENT:				//si se apreta una tecla, hay distintas opciones:
 	{
 		switch (myEvent.data)
 		{
@@ -99,9 +102,9 @@ dispatch()
 			
 			case '+':				//reducir el delay
 			{
-				if (this->delay > 0)
+				if (this->delay > 400)
 				{
-					this->delay -= 1;
+					this->delay -= 250;
 				}
 			}
 				
@@ -109,15 +112,19 @@ dispatch()
 			
 			case '-':				//aumentar el delay
 			{
-				this->delay += 1;
+				if (delay < 2000)
+				{
+					this->delay += 250;
+				}
 			}
 				
 			break;
+			default: break;
 		}
 	}
 	break;	
 
-	case SOFTWARE_EV:
+	case SOFTWARE_EV:		//el software event seria cuando ya se mostraron todos los tweets
 	{
 		this->display->lcdClear();
 		*(this->display) << (const unsigned char *) "Ultimo tweet.";
@@ -131,10 +138,13 @@ dispatch()
 	}
 }
 
+/*
+* displayTweet() pone el tweet en el lcd.
+*/
 void Dispatcher::
 displayTweet()
 {
-	if (currItr == 0)
+	if (currItr == 0) //si es la primera vez que se empieza a imprimir el tweet, se muestra el tiempo en la primera linea
 	{
 		display->lcdSetCursorPosition({ 0, 1 });
 		*display << (const unsigned char *)((tweets + tweetCursor)->time.c_str());
@@ -165,16 +175,23 @@ displayTweet()
 	}
 }
 
+/*
+* El timer compara un tiempo 'start'(inicialmente determinado al construir la clase, 
+* reescrito cada vez que se cumple un 'tick') y un tiempo 'end', defeinido cada vez que se llama la funcion.
+* Devuelve true solo si la diferencia entre end y start es mayor al campo delay del dispatcher.
+*/
 bool Dispatcher::getTimeStatus()
 {
 	bool ret = false;
+	
 	chrono::steady_clock::time_point end = chrono::steady_clock::now();
 
 	if (chrono::duration_cast<std::chrono::milliseconds>(end - this->start).count() >= delay)
 	{
 		ret = true;
+		this->start = chrono::steady_clock::now();
 	}
-	this->start = chrono::steady_clock::now();
+	
 	return ret;
 }
 
@@ -182,7 +199,7 @@ bool Dispatcher::
 checkLastTweet()
 {
 	bool ret = false;
-	if (tweetCursor >= tweetCount -1)
+	if (tweetCursor >= tweetCount)
 	{
 		ret = true;
 	}

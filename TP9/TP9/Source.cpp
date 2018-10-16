@@ -114,7 +114,6 @@ int main(int argc, char ** argv)
 					//Tratamos de acceder al campo acces_token del JSON
 					std::string aux = j["access_token"];
 					token = aux;
-					std::cout << "Bearer Token get from Twitter API: \n" << token << std::endl;
 				}
 				catch (std::exception& e)
 				{
@@ -220,7 +219,7 @@ int main(int argc, char ** argv)
 						i++;
 					}
 					Dispatcher dispatcher(tweets, a.tweetcount, lcd);
-
+					Sleep(100);
 					while (!dispatcher.getExit())
 					{
 
@@ -229,7 +228,7 @@ int main(int argc, char ** argv)
 							dispatcher.setEvent({ TIMER_EV, 0 });
 							dispatcher.dispatch();
 						}
-						else if (_kbhit())
+						if (_kbhit())
 						{
 							char data = _getch();
 							dispatcher.setEvent({ KB_EVENT, data });
@@ -240,7 +239,6 @@ int main(int argc, char ** argv)
 							dispatcher.setEvent({ SOFTWARE_EV, 0 });
 							dispatcher.dispatch();
 						}
-						dispatcher.setEvent({ NO_EVENT, 0 });
 					}
 
 					//std::cout << "Tweets retrieved from Twitter account: " << std::endl;
