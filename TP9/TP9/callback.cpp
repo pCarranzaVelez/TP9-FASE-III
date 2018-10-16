@@ -21,7 +21,9 @@ int parseCallback(char *key, char *value, void *UserData)
 		}
 		if ((strcasecmp(key, "tweetcount")) == 0)
 		{
-			pUserData->tweetcount = atoi(value);	//le asigna su valor
+			if(atoi(value)>0)
+				pUserData->tweetcount = atoi(value);	//le asigna su valor
+			
 			result = 1;
 		}
 

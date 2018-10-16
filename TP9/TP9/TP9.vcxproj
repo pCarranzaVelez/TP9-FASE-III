@@ -70,16 +70,16 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <LibraryPath>D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <LibraryPath>D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LibraryPath>C:\Users\Pilar\Desktop\ITBA\Ingeniería Electrónica\EDA\TP7\CDM v2.12.28 WHQL Certified\amd64;C:\Users\Pilar\Desktop\ITBA\Ingeniería Electrónica\EDA\TP9\curl-7.61.1-20181015T220335Z-001\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;C:\Users\Pilar\Desktop\ITBA\Ingeniería Electrónica\EDA\TP7\CDM v2.12.28 WHQL Certified\amd64;C:\Users\Pilar\Desktop\ITBA\Ingeniería Electrónica\EDA\TP9\curl-7.61.1-20181015T220335Z-001\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LibraryPath>D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
+    <LibraryPath>D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\CDM v2.12.28 WHQL Certified\amd64;D:\Documents\curl-7.61.1_6-win64-mingw\curl-7.61.1\AMD64;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -102,7 +102,7 @@
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>ftd2xx.lib;$(ProjectDir)..\..\..\..\Util\curl\builds\libcurl-vc-x64-release-dll-ipv6-sspi-winssl\lib\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>ftd2xx.lib;libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

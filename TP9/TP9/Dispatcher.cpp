@@ -91,8 +91,10 @@ dispatch()
 			break;
 			
 			case 'Q': case 'q':		//Salir
+			{
 				this->display->lcdClear();
 				this->exit = true;
+			}
 			break;
 			
 			case '+':				//reducir el delay
@@ -120,6 +122,7 @@ dispatch()
 		this->display->lcdClear();
 		*(this->display) << (const unsigned char *) "Ultimo tweet.";
 		Sleep(5000);			//cantidad 'prudencial' de tiempo
+		this->display->lcdClear();
 		this->exit = true;
 	}
 	break;
@@ -141,13 +144,18 @@ displayTweet()
 	int tweetLength = output.length();
 	if (currItr < tweetLength)
 	{
-		*(display) << (unsigned char *) (output.substr(currItr, 16).c_str());
-		currItr++;
-	}
-	else if (currItr >= (tweetLength - 16))
-	{
-		*(display) << (unsigned char *)(output.substr(currItr, (tweetLength - 16)).c_str());
-		currItr++;
+		if (currItr >= (tweetLength - END_OF_LINE))
+		{
+			*(display) << (unsigned char *)(output.substr(currItr, (tweetLength - END_OF_LINE)).c_str());
+			display->lcdSetCursorPosition({ 1, ((tweetLength - END_OF_LINE) + currItr -1) });
+			display->lcdClearToEOL();
+			currItr++;
+		}
+		else
+		{
+			*(display) << (unsigned char *)(output.substr(currItr, 16).c_str());
+			currItr++;
+		}
 	}
 	else
 	{

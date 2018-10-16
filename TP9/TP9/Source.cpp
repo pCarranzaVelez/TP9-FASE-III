@@ -96,6 +96,7 @@ int main(int argc, char ** argv)
 					std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
 					//Hacemos un clean up de curl antes de salir.
 					curl_easy_cleanup(curl);
+					delete[] tweets;
 					delete lcd;
 					return 0;
 				}
@@ -119,6 +120,7 @@ int main(int argc, char ** argv)
 				{
 					//Si hubo algun error, se muestra el error que devuelve la libreria
 					std::cerr << e.what() << std::endl;
+					delete[] tweets;
 					delete lcd;
 					return 0;
 				}
@@ -126,6 +128,7 @@ int main(int argc, char ** argv)
 			else
 			{
 				std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
+				delete[] tweets;
 				delete lcd;
 				return 0;
 			}
@@ -176,11 +179,11 @@ int main(int argc, char ** argv)
 					//	algo que muestre en el display que no se colgó
 					lcd->lcdSetCursorPosition({1, 7});
 					*lcd << '.';
-					Sleep(20);
+					Sleep(200);
 					*lcd << '.';
-					Sleep(20);
+					Sleep(200);
 					*lcd << '.';
-					Sleep(20);
+					Sleep(200);
 					lcd->lcdSetCursorPosition({1, 6});
 					lcd->lcdClearToEOL();
 					Sleep(100);
@@ -193,6 +196,7 @@ int main(int argc, char ** argv)
 					std::cerr << "curl_easy_perform() failed: " << curl_easy_strerror(res) << std::endl;
 					//Hacemos un clean up de curl antes de salir.
 					curl_easy_cleanup(curl);
+					delete[] tweets;
 					delete lcd;
 					return 0;
 				}
@@ -219,24 +223,26 @@ int main(int argc, char ** argv)
 
 					while (!dispatcher.getExit())
 					{
-						if (_kbhit())
-						{
-							char data = _getch();
-							dispatcher.setEvent({ KB_EVENT, data });
-							dispatcher.dispatch();
-						}
+
 						if(dispatcher.getTimeStatus())
 						{
 							dispatcher.setEvent({ TIMER_EV, 0 });
 							dispatcher.dispatch();
 						}
-						if (dispatcher.checkLastTweet())
+						else if (_kbhit())
+						{
+							char data = _getch();
+							dispatcher.setEvent({ KB_EVENT, data });
+ 							dispatcher.dispatch();
+						}
+						if(dispatcher.checkLastTweet())
 						{
 							dispatcher.setEvent({ SOFTWARE_EV, 0 });
 							dispatcher.dispatch();
 						}
 						dispatcher.setEvent({ NO_EVENT, 0 });
 					}
+
 					//std::cout << "Tweets retrieved from Twitter account: " << std::endl;
 				}
 				catch (std::exception& e)
@@ -250,6 +256,7 @@ int main(int argc, char ** argv)
 			else
 				std::cout << "Cannot download tweets. Unable to start cURL" << std::endl;
 
+			delete[] tweets;
 			delete lcd;
 			return 0;
 		}
