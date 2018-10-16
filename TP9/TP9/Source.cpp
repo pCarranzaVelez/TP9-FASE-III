@@ -174,18 +174,16 @@ int main(int argc, char ** argv)
 					curl_multi_perform(multiHandle, &stillRunning);
 
 					//	algo que muestre en el display que no se colgó
-					lcd->lcdSetCursorPosition({1, 6});
+					lcd->lcdSetCursorPosition({1, 7});
 					*lcd << '.';
-					Sleep(10);
+					Sleep(20);
 					*lcd << '.';
-					Sleep(10);
+					Sleep(20);
 					*lcd << '.';
-					Sleep(10);
-					*lcd << '.';
-					Sleep(10);
+					Sleep(20);
 					lcd->lcdSetCursorPosition({1, 6});
 					lcd->lcdClearToEOL();
-
+					Sleep(100);
 				}
 				lcd->lcdSetCursorPosition({ 1,6 });
 				lcd->lcdClear();
@@ -212,7 +210,7 @@ int main(int argc, char ** argv)
 					int i = 0;
 					for (auto element : j)
 					{
-						(tweets + i)->text = element["text"].get<std::string>();
+						(tweets + i)->text = element["text"].get<std::string>();	
 						(tweets + i)->time = stringToDate(element["created_at"].get<std::string>());	//DD/MM/AA - hh:mm
 						(tweets + i)->name = element["user"]["name"].get<std::string>();
 						i++;
@@ -227,9 +225,14 @@ int main(int argc, char ** argv)
 							dispatcher.setEvent({ KB_EVENT, data });
 							dispatcher.dispatch();
 						}
-						else if(dispatcher.getTimeStatus())
+						if(dispatcher.getTimeStatus())
 						{
 							dispatcher.setEvent({ TIMER_EV, 0 });
+							dispatcher.dispatch();
+						}
+						if (dispatcher.checkLastTweet())
+						{
+							dispatcher.setEvent({ SOFTWARE_EV, 0 });
 							dispatcher.dispatch();
 						}
 						dispatcher.setEvent({ NO_EVENT, 0 });

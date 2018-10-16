@@ -91,13 +91,17 @@ std::string stringToDate(std::string date)
 
 std::string stringMonthToNumber(std::string month)
 {
-	std::string months[12] = { "Jan", "Feb", "Mar", "Apr", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+	std::string months[12] = { "Jan", "Feb", "Mar", "Apr","May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 	std::string month_num;
 	for (int i = 0; i < 12; i++)
 	{
-		if (strcmp(month.c_str(), months[i].c_str()))
+		if (!strcmp(month.c_str(), months[i].c_str()))
 		{
 			int realMonth = i + 1;
+			if (realMonth < 10)
+			{
+				month_num = "0" + std::to_string(realMonth);
+			}
 			month_num = std::to_string(realMonth);
 			return month_num;
 		}

@@ -29,13 +29,12 @@ class Dispatcher
 		void setEvent(event_t input);
 		void setEvent(EVENT_TYPE type, char data);
 		bool getTimeStatus();
-
+		bool checkLastTweet();
 
 	private:
 		chrono::steady_clock::time_point start;
 		int currItr;
 		void displayTweet();
-		char  currTweetThread[END_OF_LINE + 1];
 		tweetData_t * tweets;
 		unsigned int tweetCount;
 		bool exit;

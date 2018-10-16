@@ -99,6 +99,7 @@
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\..\..\Util\curl\builds\libcurl-vc-x64-release-dll-ipv6-sspi-winssl\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>ftd2xx.lib;$(ProjectDir)..\..\..\..\Util\curl\builds\libcurl-vc-x64-release-dll-ipv6-sspi-winssl\lib\libcurl.lib;%(AdditionalDependencies)</AdditionalDependencies>

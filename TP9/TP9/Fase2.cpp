@@ -156,6 +156,7 @@ lcdSetCursorPosition(const cursorPosition pos)
 	{
 		ans = false;
 	}
+	lcdUpdateCursor();
 	return ans;
 }
 
@@ -163,15 +164,15 @@ cursorPosition Fase2::
 lcdGetCursorPosition()
 {
 	cursorPosition pos;
-		if (cadd / 2 > END_OF_LINE)	//veo si el cursor está en la segunda linea
+		if (cadd > END_OF_LINE)	//veo si el cursor está en la segunda linea
 		{
 			pos.row = 1;	//segunda linea
-			pos.column = cadd - (END_OF_LINE+1);	//setteo la posición
+			pos.column = cadd - (END_OF_LINE);	//setteo la posición
 		}
 		else
 		{
 			pos.row = 0;	//primera linea
-			pos.column = cadd - 1;	//setteo la posición
+			pos.column = cadd;	//setteo la posición
 		}
 		return pos;
 }
